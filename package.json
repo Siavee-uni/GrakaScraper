@@ -1,0 +1,17 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index,js",
+  "dependencies": {
+    "node-cron": "^2.0.3",
+    "puppeteer": "^8.0.0",
+    "user-agents": "^1.0.577"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
