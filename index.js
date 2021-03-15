@@ -16,10 +16,11 @@ const urls = {
 
 let currentdate = new Date();
 let datetime =
-    currentdate.getDate() +
-    "." +
-    (currentdate.getMonth() + 1) +
-    "." +
+"date: " +
+currentdate.getDate() +
+"." +
+(currentdate.getMonth() + 1) +
+". time: " +
     currentdate.getHours() +
     ":" +
     currentdate.getMinutes() +
@@ -30,8 +31,10 @@ let datetime =
     const task = cron.schedule('* * * * *', run)
     async function run() {
         try {
+            console.time('scraping took');
             result = await scrape(token, telegramIds, urls)
-            console.log("scraping succesfull " + datetime)
+            console.timeEnd('scraping took');
+            console.log("scraping succesfull "+ datetime)
             /* task.stop(); */
         } catch (error) {
             /* task.stop(); */

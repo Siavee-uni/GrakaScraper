@@ -15,7 +15,6 @@ const scrape = async function scape(token, telegramIds, urls) {
     if (result.captcha) {
       continue;
     }
-    console.log(result)
     if (result.billiger) { 
 
         if ((result.price)) { 

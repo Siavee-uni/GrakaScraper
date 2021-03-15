@@ -41,8 +41,7 @@ class Scraper {
         const options = {
             args,
             headless: false,
-            ignoreHTTPSErrors: true,
-            slowMo: 250,
+            ignoreHTTPSErrors: true
         };
         let browser = null;
         let urls = [];
