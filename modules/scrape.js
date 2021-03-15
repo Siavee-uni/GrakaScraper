@@ -16,8 +16,9 @@ const scrape = async function scape(token, telegramIds, urls) {
       continue;
     }
     console.log(result)
-    if (!result.noneOb) { 
-        if (result.price) { 
+    if (result.billiger) { 
+
+        if ((result.price)) { 
             console.log("verfügbar" + result.url + " für " + result.price)
             telegram.setMessage(result.url + " ist für " + result.price + " verfügbar");
             telegram.sendMessage();
@@ -26,15 +27,14 @@ const scrape = async function scape(token, telegramIds, urls) {
     }
     for (let [key, value] of Object.entries(result)) { 
       try {
-        if (isAvailable){
-            console.log("verfügbar" + purchaseLink + " für " + salePrice)
-            telegram.setMessage(result.url + " ist für " + result.price + " verfügbar");
+        if (value[0].stock > 0 || value[0].hasOffer ){
+            console.log("verfügbar " + value[0].directPurchaseLink + " für " + value[0].salePrice)
+            telegram.setMessage(result.url + " ist für " + result.price + " verfügbar direkt link: " + value[0].directPurchaseLink);
             telegram.sendMessage();
         }
       } catch (e) {}
     }
   }
-  return false;
 };
 
 module.exports = scrape;

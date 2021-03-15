@@ -1,9 +1,8 @@
 const cron = require('node-cron');
 const scrape = require('./modules/scrape');
-const Telegram = require('./classes/telegramm.class');
 const fs = require('fs');
 // define data
-const token = "1655902372:AAF-Tun0dNHZ2CFVyzoWUcF1-teGs6Znhrw";
+const token = "1698301740:AAFmBg32oYWvwG-Cu-2vG86ISlUbfxxb3Nc";
 const telegramIds = {
     "ich": "1691025980",
     "alex": "217864414"
@@ -11,8 +10,10 @@ const telegramIds = {
 const urls = {
     "nvidia" : "https://shop.nvidia.com/de-de/geforce/store",
     "1" : "https://www.notebooksbilliger.de/product.php/nvidia+geforce+rtx+3080+founders+edition+683301",
-    "2" : "https://www.notebooksbilliger.de/nvidia+geforce+rtx+3080+founders+edition+690362"
+    "2" : "https://www.notebooksbilliger.de/nvidia+geforce+rtx+3080+founders+edition+690362",
+    "3" : "https://www.notebooksbilliger.de/nvidia+geforce+rtx+3080+founders+edition+700586"
 };
+
 let currentdate = new Date();
 let datetime =
     currentdate.getDate() +
@@ -26,8 +27,7 @@ let datetime =
     currentdate.getSeconds();
 // start 
 (async() => {
-    /* const task = cron.schedule('* * * * *', run) */
-    result = await scrape(token, telegramIds, urls)
+    const task = cron.schedule('* * * * *', run)
     async function run() {
         try {
             result = await scrape(token, telegramIds, urls)

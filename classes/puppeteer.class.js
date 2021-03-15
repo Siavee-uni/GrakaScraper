@@ -96,8 +96,8 @@ class Scraper {
 
                     let price = await page.evaluate(() => {
                         let el = document.querySelector("#product_detail_price");
-                        return el ? el.getAttribute('data-price-formatted').value : false;
-        
+                        let price = el ? el.getAttribute('data-price-formatted') : false;
+                        return price;
                     });
                         captcha = await page.evaluate(() => {
                         let el = document.querySelector("#searchex_scout");
@@ -105,9 +105,9 @@ class Scraper {
                     });
                     let object = {
                         "price": price,
-                        "noneOb": true,
+                        "billiger": true,
                         "captcha": captcha,
-                        "url" : value
+                        "url" : value.replace(/\+/g, '%2B')
                     }
                     urls.push(object);
                 }
