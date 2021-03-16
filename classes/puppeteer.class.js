@@ -72,10 +72,10 @@ class Scraper {
           });
 
           let billiger = {
-            price: price,
-            billiger: true,
-            captcha: captcha,
-            url: value.replace(/\+/g, "%2B"),
+            "price": price,
+            "billiger": true,
+            "captcha": captcha,
+            "url": value.replace(/\+/g, "%2B"),
           };
           urls.push(billiger);
         }

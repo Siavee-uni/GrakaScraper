@@ -13,9 +13,9 @@ const scrape = async function scape(token, telegramIds, urls) {
   for (let result of results) {
     // check for amazon captcha
     if (result.captcha) {
-      console.log("captcha");
-      continue;
+      console.log("run into captcha or site broke");
     }
+    // check for billger
     if (result.billiger) {
       if (result.price) {
         console.log("verfügbar" + result.url + " für " + result.price);
@@ -26,9 +26,9 @@ const scrape = async function scape(token, telegramIds, urls) {
       }
       continue;
     }
+    // check for nvidia
     for (const value of Object.values(result)){
       try {
-        console.log(value[0].stock);
         if (value[0].stock > 0 || value[0].hasOffer) {
           console.log(
             "verfügbar " +
