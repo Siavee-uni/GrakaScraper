@@ -2,7 +2,7 @@ const Scraper = require("../classes/puppeteer.class");
 const Telegram = require("../classes/telegramm.class");
 
 const scrape = async function scape(token, telegramIds, urls) {
-  // inicialice class
+  // initialize class
   let scraper = new Scraper();
   scraper.setUrl(urls);
   let telegram = new Telegram(token);
@@ -13,23 +13,37 @@ const scrape = async function scape(token, telegramIds, urls) {
   for (let result of results) {
     // check for amazon captcha
     if (result.captcha) {
+      console.log("captcha");
       continue;
     }
-    if (result.billiger) { 
-
-        if ((result.price)) { 
-            console.log("verfügbar" + result.url + " für " + result.price)
-            telegram.setMessage(result.url + " ist für " + result.price + " verfügbar");
-            telegram.sendMessage();
-        }
-        continue;
+    if (result.billiger) {
+      if (result.price) {
+        console.log("verfügbar" + result.url + " für " + result.price);
+        telegram.setMessage(
+          result.url + " ist für " + result.price + " verfügbar"
+        );
+        telegram.sendMessage();
+      }
+      continue;
     }
-    for (let [key, value] of Object.entries(result)) { 
+    for (const value of Object.values(result)){
       try {
-        if (value[0].stock > 0 || value[0].hasOffer ){
-            console.log("verfügbar " + value[0].directPurchaseLink + " für " + value[0].salePrice)
-            telegram.setMessage(result.url + " ist für " + result.price + " verfügbar direkt link: " + value[0].directPurchaseLink);
-            telegram.sendMessage();
+        console.log(value[0].stock);
+        if (value[0].stock > 0 || value[0].hasOffer) {
+          console.log(
+            "verfügbar " +
+              value[0].directPurchaseLink +
+              " für " +
+              value[0].salePrice
+          );
+          telegram.setMessage(
+            result.url +
+              " ist für " +
+              result.price +
+              " verfügbar direkt link: " +
+              value[0].directPurchaseLink
+          );
+          telegram.sendMessage();
         }
       } catch (e) {}
     }
