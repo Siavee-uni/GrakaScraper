@@ -112,22 +112,18 @@ class Scraper {
           for (let url of value) {
             await page.goto(url, { waitUntil: "domcontentloaded" });
             let NVGFT080 = await page.evaluate(() => {
-              let el = JSON.parse(
-                document.querySelector(".buy .NVGFT080").innerText
-              );
-              return el ? el : false;
+              let el = document.querySelector(".buy .NVGFT080")
+              
+              return el ? JSON.parse(el.innerText) : false;
             });
             let NVGFT070 = await page.evaluate(() => {
-              let el = JSON.parse(
-                document.querySelector(".buy .NVGFT070").innerText
-              );
-              return el ? el : false;
+              let el = document.querySelector(".buy .NVGFT070")
+              return el ? JSON.parse(el.innerText) : false;
             });
             let NVGFT060T = await page.evaluate(() => {
-              let el = JSON.parse(
-                document.querySelector(".buy .NVGFT060T").innerText
-              );
-              return el ? el : false;
+              let el = document.querySelector(".buy .NVGFT060T")
+             
+              return el ? JSON.parse(el.innerText) : false;
             });
             captcha = await page.evaluate(() => {
               let el = document.querySelector("#mainCont");

@@ -30,7 +30,7 @@ const scrape = async function scape(token, telegramIds, urls) {
       if (result.name) {
         console.log("verfügbar " + result.url);
         telegram.setMessage(
-          result.url + " ist verfügbar"
+          result.url + " ist verfügbar!!! kaufen!!!!"
         );
         telegram.sendMessage();
       }

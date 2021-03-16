@@ -6,7 +6,9 @@ const time = require("./modules/time");
 const token = "1698301740:AAFmBg32oYWvwG-Cu-2vG86ISlUbfxxb3Nc";
 const telegramIds = {
     "ich": "1691025980",
-    "alex": "217864414"
+    "alex": "217864414",
+    "hendrik": "1690666319",
+    "denis": "1757821955"
 };
 const urls = {
     "nvidia": ["https://shop.nvidia.com/de-de/geforce/store"] ,
@@ -16,20 +18,20 @@ const urls = {
     "bilshort":[
                 "https://www.notebooksbilliger.de/extensions/ntbde/getsearchlisting.php?pids=683301",
                 "https://www.notebooksbilliger.de/extensions/ntbde/getsearchlisting.php?pids=690362",
-                "https://www.notebooksbilliger.de/extensions/ntbde/getsearchlisting.php?pids=700586",
-                "https://www.notebooksbilliger.de/extensions/ntbde/getsearchlisting.php?pids=269374"]     
+                "https://www.notebooksbilliger.de/extensions/ntbde/getsearchlisting.php?pids=700586",]     
     
 };
 // start 
 (async() => {
 
     let task = cron.schedule('* * * * *', run) 
-
+    await run()
     async function run() {
         try {
             console.time('scraping-took');
             await scrape(token, telegramIds, urls);
             console.timeEnd('scraping-took');
+            console._times.clear();
             console.log("scraping successful " + time.getTimeStemp("console"))
         } catch (error) {
             // write error to log
