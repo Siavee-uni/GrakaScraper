@@ -13,27 +13,26 @@ const urls = {
     "2" : "https://www.notebooksbilliger.de/nvidia+geforce+rtx+3080+founders+edition+690362",
     "3" : "https://www.notebooksbilliger.de/nvidia+geforce+rtx+3080+founders+edition+700586"
 };
-
-let currentdate = new Date();
-let datetime =
-"date: " +
-currentdate.getDate() +
-"." +
-(currentdate.getMonth() + 1) +
-". time: " +
-    currentdate.getHours() +
-    ":" +
-    currentdate.getMinutes() +
-    ":" +
-    currentdate.getSeconds();
 // start 
 (async() => {
     const task = cron.schedule('* * * * *', run)
     async function run() {
         try {
-            console.time('scraping took');
+            let currentdate = new Date();
+            let datetime =
+            "date: " +
+            currentdate.getDate() +
+            "." +
+            (currentdate.getMonth() + 1) +
+            ". time: " +
+                currentdate.getHours() +
+                ":" +
+                currentdate.getMinutes() +
+                ":" +
+                currentdate.getSeconds();
+            console.time('scraping-took');
             result = await scrape(token, telegramIds, urls)
-            console.timeEnd('scraping took');
+            console.timeEnd('scraping-took');
             console.log("scraping succesfull "+ datetime)
             /* task.stop(); */
         } catch (error) {
