@@ -13,7 +13,8 @@ function getTimeStemp (input) {
             "." +
             currentDate.getMinutes() +
             "." +
-            currentDate.getSeconds();
+            currentDate.getSeconds() + "." +
+            currentDate.getMilliseconds();
     }
     if (input == "console") {
         return datetime =

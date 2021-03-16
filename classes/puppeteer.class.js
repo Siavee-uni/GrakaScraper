@@ -62,17 +62,18 @@ class Scraper {
         let captcha = null;
         if (key === "bilshort") {
           for (let url of value) {
+            console.log("s")
             await page.goto(url, { waitUntil: "domcontentloaded" });
 
             let name = await page.evaluate(() => {
               let el = document.querySelector(".listing .product_name");
               return el ? true : false;
             });
-            if (captcha) {
+            /* if (captcha) { */
               await page.screenshot({
                 path: "screenshots/captcha" + time.getTimeStemp("file") + ".jpeg",
               });
-            }
+            /* } */
             let object = {
               "bilshort": true,
               "name": name,
@@ -94,11 +95,11 @@ class Scraper {
               let el = document.querySelector("#searchex_scout");
               return !el;
             });
-            if (captcha) {
+            /* if (captcha) { */
               await page.screenshot({
                 path: "screenshots/captcha" + time.getTimeStemp("file") + ".jpeg",
               });
-            }
+            /* } */
             let billiger = {
               "price": price,
               "billiger": true,
@@ -133,11 +134,11 @@ class Scraper {
               let el = document.querySelector("#mainCont");
               return el ? false : true;
             });
-            if (captcha) {
+            /* if (captcha) { */
               await page.screenshot({
                 path: "screenshots/captcha" + time.getTimeStemp("file") + ".jpeg",
               });
-            }
+            /* } */
             let nvidia = {
               "billiger": false,
               "NVGFT080": NVGFT080,
