@@ -40,7 +40,7 @@ class Scraper {
 
         const options = {
             args,
-            headless: false,
+            headless: true,
             ignoreHTTPSErrors: true
         };
         let browser = null;
