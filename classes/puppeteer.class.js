@@ -40,7 +40,7 @@ class Scraper {
 
         const options = {
             args,
-            headless: true,
+            headless: false,
             ignoreHTTPSErrors: true
         };
         let browser = null;
@@ -55,6 +55,16 @@ class Scraper {
             // set user agent (override the default headless User Agent)
             await page.setUserAgent(device.toString());
             await page.setViewport({ width: 1080, height: 1080 });
+            await page.setRequestInterception(true);
+            // remove css/image/fonts
+            page.on('request', (req) => {
+                if(req.resourceType() == 'stylesheet' || req.resourceType() == 'font' || req.resourceType() == 'image'){
+                    req.abort();
+                }
+                else {
+                    req.continue();
+                }
+            });
 
             for (const [key, value] of Object.entries(this.url)) {
                 // check for product awailability
@@ -62,8 +72,28 @@ class Scraper {
                 let NVGFT080 = null;
                 let NVGFT070 = null;
                 let NVGFT060T = null;
-                if (key === "nvidia") {
+                if (key !== "nvidia") {
                     await page.goto(value);
+
+                    let price = await page.evaluate(() => {
+                        let el = document.querySelector("#product_detail_price");
+                        let price = el ? el.getAttribute('data-price-formatted') : false;
+                        return price;
+                    });
+                        captcha = await page.evaluate(() => {
+                        let el = document.querySelector("#searchex_scout");
+                        return el ? false : true;
+                    });
+                    let object = {
+                        "price": price,
+                        "billiger": true,
+                        "captcha": captcha,
+                        "url" : value.replace(/\+/g, '%2B')
+                    }
+                    urls.push(object);
+
+                } else {
+                    await page.goto(value,{ waitUntil: 'domcontentloaded' });
                     let NVGFT080 = await page.evaluate(() => {
                         let el = JSON.parse(document.querySelector(".buy .NVGFT080").innerText);
                         return el ? el : false;
@@ -88,25 +118,6 @@ class Scraper {
                         "NVGFT070": NVGFT070,
                         "NVGFT060T": NVGFT060T,
                         "captcha": captcha,
-                    }
-                    urls.push(object);
-                } else {
-                    await page.goto(value);
-
-                    let price = await page.evaluate(() => {
-                        let el = document.querySelector("#product_detail_price");
-                        let price = el ? el.getAttribute('data-price-formatted') : false;
-                        return price;
-                    });
-                        captcha = await page.evaluate(() => {
-                        let el = document.querySelector("#searchex_scout");
-                        return el ? false : true;
-                    });
-                    let object = {
-                        "price": price,
-                        "billiger": true,
-                        "captcha": captcha,
-                        "url" : value.replace(/\+/g, '%2B')
                     }
                     urls.push(object);
                 }
