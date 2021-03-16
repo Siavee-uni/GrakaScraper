@@ -26,6 +26,17 @@ const scrape = async function scape(token, telegramIds, urls) {
       }
       continue;
     }
+    if (result.bilshort) {
+      if (result.name) {
+        console.log("verfügbar " + result.url);
+        telegram.setMessage(
+          result.url + " ist verfügbar"
+        );
+        telegram.sendMessage();
+      }
+      continue;
+    }
+
     // check for nvidia
     for (const value of Object.values(result)){
       try {

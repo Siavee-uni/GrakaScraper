@@ -9,15 +9,21 @@ const telegramIds = {
     "alex": "217864414"
 };
 const urls = {
-    "nvidia" : "https://shop.nvidia.com/de-de/geforce/store",
-    "b1" : "https://www.notebooksbilliger.de/product.php/nvidia+geforce+rtx+3080+founders+edition+683301",
-    "b2" : "https://www.notebooksbilliger.de/nvidia+geforce+rtx+3080+founders+edition+690362",
-    "b3" : "https://www.notebooksbilliger.de/nvidia+geforce+rtx+3080+founders+edition+700586"
+    "nvidia": ["https://shop.nvidia.com/de-de/geforce/store"] ,
+   /*  "billiger": ["https://www.notebooksbilliger.de/product.php/nvidia+geforce+rtx+3080+founders+edition+683301",
+                "https://www.notebooksbilliger.de/nvidia+geforce+rtx+3080+founders+edition+690362",
+                "https://www.notebooksbilliger.de/nvidia+geforce+rtx+3080+founders+edition+700586"], */
+    "bilshort":["https://www.notebooksbilliger.de/extensions/ntbde/getsearchlisting.php?pids=269374",
+                "https://www.notebooksbilliger.de/extensions/ntbde/getsearchlisting.php?pids=683301",
+                "https://www.notebooksbilliger.de/extensions/ntbde/getsearchlisting.php?pids=690362",
+                "https://www.notebooksbilliger.de/extensions/ntbde/getsearchlisting.php?pids=700586"]     
+    
 };
 // start 
 (async() => {
 
-    let task = cron.schedule('* * * * *', run)
+    /* let task = cron.schedule('* * * * *', run) */
+    await run();
     async function run() {
         try {
             console.time('scraping-took');

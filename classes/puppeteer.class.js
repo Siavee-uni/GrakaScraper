@@ -2,6 +2,7 @@ const puppeteer = require("puppeteer");
 const UserAgent = require("user-agents");
 const fs = require("fs");
 const time = require("../modules/time");
+/* const scrapePids = require("../modules/bill-pids-puppeteer") */
 
 class Scraper {
   constructor() {
@@ -59,58 +60,79 @@ class Scraper {
       for (const [key, value] of Object.entries(this.url)) {
         // check for product availability
         let captcha = null;
-        if (key !== "nvidia") {
-          await page.goto(value, { waitUntil: "domcontentloaded" });
+        if (key === "bilshort") {
+          for (let url of value) {
+            await page.goto(url, { waitUntil: "domcontentloaded" });
 
-          let price = await page.evaluate(() => {
-            let el = document.querySelector("#product_detail_price");
-            return el ? el.getAttribute("data-price-formatted") : false;
-          });
-          captcha = await page.evaluate(() => {
-            let el = document.querySelector("#searchex_scout");
-            return !el;
-          });
+            let name = await page.evaluate(() => {
+              let el = document.querySelector(".listing .product_name");
+              return el ? true : false;
+            });
+            let object = {
+              "bilshort": true,
+              "name": name,
+              "url": url.replace(/\+/g, "%2B"),
+            };
+            urls.push(object);
+          }
+        }
 
-          let billiger = {
-            "price": price,
-            "billiger": true,
-            "captcha": captcha,
-            "url": value.replace(/\+/g, "%2B"),
-          };
-          urls.push(billiger);
+        if (key === "billiger") {
+          for (let url of value) {
+            await page.goto(url, { waitUntil: "domcontentloaded" });
+
+            let price = await page.evaluate(() => {
+              let el = document.querySelector("#product_detail_price");
+              return el ? el.getAttribute("data-price-formatted") : false;
+            });
+            captcha = await page.evaluate(() => {
+              let el = document.querySelector("#searchex_scout");
+              return !el;
+            });
+
+            let billiger = {
+              "price": price,
+              "billiger": true,
+              "captcha": captcha,
+              "url": url.replace(/\+/g, "%2B"),
+            };
+            urls.push(billiger);
+          }
         }
         if (key === "nvidia") {
-          await page.goto(value, { waitUntil: "domcontentloaded" });
-          let NVGFT080 = await page.evaluate(() => {
-            let el = JSON.parse(
-              document.querySelector(".buy .NVGFT080").innerText
-            );
-            return el ? el : false;
-          });
-          let NVGFT070 = await page.evaluate(() => {
-            let el = JSON.parse(
-              document.querySelector(".buy .NVGFT070").innerText
-            );
-            return el ? el : false;
-          });
-          let NVGFT060T = await page.evaluate(() => {
-            let el = JSON.parse(
-              document.querySelector(".buy .NVGFT060T").innerText
-            );
-            return el ? el : false;
-          });
-          captcha = await page.evaluate(() => {
-            let el = document.querySelector("#mainCont");
-            return el ? false : true;
-          });
-          let nvidia = {
-            "billiger": false,
-            "NVGFT080": NVGFT080,
-            "NVGFT070": NVGFT070,
-            "NVGFT060T": NVGFT060T,
-            "captcha": captcha,
-          };
-          urls.push(nvidia);
+          for (let url of value) {
+            await page.goto(url, { waitUntil: "domcontentloaded" });
+            let NVGFT080 = await page.evaluate(() => {
+              let el = JSON.parse(
+                document.querySelector(".buy .NVGFT080").innerText
+              );
+              return el ? el : false;
+            });
+            let NVGFT070 = await page.evaluate(() => {
+              let el = JSON.parse(
+                document.querySelector(".buy .NVGFT070").innerText
+              );
+              return el ? el : false;
+            });
+            let NVGFT060T = await page.evaluate(() => {
+              let el = JSON.parse(
+                document.querySelector(".buy .NVGFT060T").innerText
+              );
+              return el ? el : false;
+            });
+            captcha = await page.evaluate(() => {
+              let el = document.querySelector("#mainCont");
+              return el ? false : true;
+            });
+            let nvidia = {
+              "billiger": false,
+              "NVGFT080": NVGFT080,
+              "NVGFT070": NVGFT070,
+              "NVGFT060T": NVGFT060T,
+              "captcha": captcha,
+            };
+            urls.push(nvidia);
+          }
         }
         if (captcha) {
           await page.screenshot({
@@ -120,6 +142,7 @@ class Scraper {
       }
 
       return urls;
+      
     } catch (err) {
       console.log(`Error: ${err.message}`);
     } finally {
