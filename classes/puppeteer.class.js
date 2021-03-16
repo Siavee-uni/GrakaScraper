@@ -30,7 +30,7 @@ class Scraper {
 
     const options = {
       args,
-      headless: false,
+      headless: true,
       ignoreHTTPSErrors: true,
     };
     let browser = null;
@@ -62,7 +62,6 @@ class Scraper {
         let captcha = null;
         if (key === "bilshort") {
           for (let url of value) {
-            console.log("s")
             await page.goto(url, { waitUntil: "domcontentloaded" });
 
             let name = await page.evaluate(() => {
