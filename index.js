@@ -22,8 +22,8 @@ const urls = {
 // start 
 (async() => {
 
-    /* let task = cron.schedule('* * * * *', run) */
-    await run();
+    let task = cron.schedule('* * * * *', run) 
+
     async function run() {
         try {
             console.time('scraping-took');

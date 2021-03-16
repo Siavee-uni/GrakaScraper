@@ -68,6 +68,11 @@ class Scraper {
               let el = document.querySelector(".listing .product_name");
               return el ? true : false;
             });
+            if (captcha) {
+              await page.screenshot({
+                path: "screenshots/captcha" + time.getTimeStemp("file") + ".jpeg",
+              });
+            }
             let object = {
               "bilshort": true,
               "name": name,
@@ -89,7 +94,11 @@ class Scraper {
               let el = document.querySelector("#searchex_scout");
               return !el;
             });
-
+            if (captcha) {
+              await page.screenshot({
+                path: "screenshots/captcha" + time.getTimeStemp("file") + ".jpeg",
+              });
+            }
             let billiger = {
               "price": price,
               "billiger": true,
@@ -124,6 +133,11 @@ class Scraper {
               let el = document.querySelector("#mainCont");
               return el ? false : true;
             });
+            if (captcha) {
+              await page.screenshot({
+                path: "screenshots/captcha" + time.getTimeStemp("file") + ".jpeg",
+              });
+            }
             let nvidia = {
               "billiger": false,
               "NVGFT080": NVGFT080,
@@ -133,11 +147,6 @@ class Scraper {
             };
             urls.push(nvidia);
           }
-        }
-        if (captcha) {
-          await page.screenshot({
-            path: "screenshots/captcha" + time.getTimeStemp("file") + ".jpeg",
-          });
         }
       }
 
