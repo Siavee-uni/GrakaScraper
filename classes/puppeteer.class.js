@@ -6,11 +6,15 @@ const time = require("../modules/time");
 
 class Scraper {
   constructor() {
-    this.url = {};
+    this.url = [];
+    this.loglv;
   }
 
-  setUrl(urlObject) {
-    this.url = urlObject;
+  setUrl(urlArray) {
+    this.url = urlArray;
+  }
+  setLogLv(boolean) {
+    this.loglv = boolean;
   }
 
   async getPage() {
@@ -30,7 +34,7 @@ class Scraper {
 
     const options = {
       args,
-      headless: true,
+      headless: false,
       ignoreHTTPSErrors: true,
     };
     let browser = null;
@@ -45,6 +49,7 @@ class Scraper {
       await page.setUserAgent(device.toString());
       await page.setViewport({ width: 1080, height: 1080 });
       await page.setRequestInterception(true);
+      await page.setDefaultNavigationTimeout(0); 
       // remove css/image/fonts
       page.on("request", (req) => {
         if (
@@ -60,6 +65,9 @@ class Scraper {
       for (const [key, value] of Object.entries(this.url)) {
         // check for product availability
         let captcha = null;
+        if (this.loglv) {
+          await page.screenshot({ path: "screenshots/log" + time.getTimeStemp("file") + ".jpeg" });
+        }
         if (key === "bilshort") {
           for (let url of value) {
             await page.goto(url, { waitUntil: "domcontentloaded" });
@@ -68,15 +76,10 @@ class Scraper {
               let el = document.querySelector(".listing .product_name");
               return el ? true : false;
             });
-            /* if (captcha) { */
-              await page.screenshot({
-                path: "screenshots/captcha" + time.getTimeStemp("file") + ".jpeg",
-              });
-            /* } */
             let object = {
-              "bilshort": true,
-              "name": name,
-              "url": url.replace(/\+/g, "%2B"),
+              bilshort: true,
+              name: name,
+              url: url.replace(/\+/g, "%2B"),
             };
             urls.push(object);
           }
@@ -94,16 +97,11 @@ class Scraper {
               let el = document.querySelector("#searchex_scout");
               return !el;
             });
-            /* if (captcha) { */
-              await page.screenshot({
-                path: "screenshots/captcha" + time.getTimeStemp("file") + ".jpeg",
-              });
-            /* } */
             let billiger = {
-              "price": price,
-              "billiger": true,
-              "captcha": captcha,
-              "url": url.replace(/\+/g, "%2B"),
+              price: price,
+              billiger: true,
+              captcha: captcha,
+              url: url.replace(/\+/g, "%2B"),
             };
             urls.push(billiger);
           }
@@ -111,35 +109,30 @@ class Scraper {
         if (key === "nvidia") {
           for (let url of value) {
             await page.goto(url, { waitUntil: "domcontentloaded" });
+
             let NVGFT080 = await page.evaluate(() => {
-              let el = document.querySelector(".buy .NVGFT080")
-              
+              let el = document.querySelector(".buy .NVGFT080");
               return el ? JSON.parse(el.innerText) : false;
             });
             let NVGFT070 = await page.evaluate(() => {
-              let el = document.querySelector(".buy .NVGFT070")
+              let el = document.querySelector(".buy .NVGFT070");
               return el ? JSON.parse(el.innerText) : false;
             });
             let NVGFT060T = await page.evaluate(() => {
-              let el = document.querySelector(".buy .NVGFT060T")
-             
+              let el = document.querySelector(".buy .NVGFT060T");
               return el ? JSON.parse(el.innerText) : false;
             });
             captcha = await page.evaluate(() => {
               let el = document.querySelector("#mainCont");
               return el ? false : true;
             });
-            /* if (captcha) { */
-              await page.screenshot({
-                path: "screenshots/captcha" + time.getTimeStemp("file") + ".jpeg",
-              });
-            /* } */
+      
             let nvidia = {
-              "billiger": false,
-              "NVGFT080": NVGFT080,
-              "NVGFT070": NVGFT070,
-              "NVGFT060T": NVGFT060T,
-              "captcha": captcha,
+              billiger: false,
+              NVGFT080: NVGFT080,
+              NVGFT070: NVGFT070,
+              NVGFT060T: NVGFT060T,
+              captcha: captcha,
             };
             urls.push(nvidia);
           }
@@ -147,7 +140,7 @@ class Scraper {
       }
 
       return urls;
-      
+
     } catch (err) {
       console.log(`Error: ${err.message}`);
     } finally {

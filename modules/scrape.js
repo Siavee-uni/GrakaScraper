@@ -2,14 +2,22 @@ const Scraper = require("../classes/puppeteer.class");
 const Telegram = require("../classes/telegramm.class");
 
 const scrape = async function scape(token, telegramIds, urls) {
+  console.time('scraping-took');
   // initialize class
   let scraper = new Scraper();
   scraper.setUrl(urls);
+  // set true for screenshots
+  scraper.setLogLv(true);
   let telegram = new Telegram(token);
   telegram.setIds(telegramIds);
   // get page content
   let results = await scraper.getPage();
   // send message
+  if (!Array.isArray(results)) {
+    console.log("puppeteer failed to scrape pages")
+    return;
+  }
+
   for (let result of results) {
     // check for amazon captcha
     if (result.captcha) {
@@ -59,6 +67,7 @@ const scrape = async function scape(token, telegramIds, urls) {
       } catch (e) {}
     }
   }
+  console.timeEnd('scraping-took');
 };
 
 module.exports = scrape;
