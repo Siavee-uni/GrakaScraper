@@ -21,7 +21,7 @@ const scrape = async function scape(token, telegramIds, urls) {
   for (let result of results) {
     // check for amazon captcha
     if (result.captcha) {
-      console.log("run into captcha or site broke");
+      console.log("run into captcha or site could not load");
     }
     // check for billger
     if (result.billiger) {
@@ -44,7 +44,6 @@ const scrape = async function scape(token, telegramIds, urls) {
       }
       continue;
     }
-
     // check for nvidia
     for (const value of Object.values(result)){
       try {

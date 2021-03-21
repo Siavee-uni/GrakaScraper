@@ -49,7 +49,6 @@ class Scraper {
       await page.setUserAgent(device.toString());
       await page.setViewport({ width: 1080, height: 1080 });
       await page.setRequestInterception(true);
-      await page.setDefaultNavigationTimeout(0); 
       // remove css/image/fonts
       page.on("request", (req) => {
         if (
@@ -87,7 +86,7 @@ class Scraper {
 
         if (key === "billiger") {
           for (let url of value) {
-            await page.goto(url, { waitUntil: "domcontentloaded" });
+            await page.goto(url, { waitUntil: "domcontentloaded",timeout: 0 });
 
             let price = await page.evaluate(() => {
               let el = document.querySelector("#product_detail_price");
@@ -128,7 +127,6 @@ class Scraper {
             });
       
             let nvidia = {
-              billiger: false,
               NVGFT080: NVGFT080,
               NVGFT070: NVGFT070,
               NVGFT060T: NVGFT060T,
